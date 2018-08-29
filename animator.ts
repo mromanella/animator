@@ -1,4 +1,14 @@
-class Animator {
+export class Animator {
+
+	canvasEl: any;
+	ctx: CanvasRenderingContext2D;
+	canvasHeight: number;
+	canvasWidth: number;
+	lastDraw: any;
+	stopped: boolean;
+	callback: any;
+	fps: number;
+	args: any[];
 
 	/**
      * @description Creates an animator class.
@@ -6,7 +16,7 @@ class Animator {
      * @param callbackFunc The function to perform on every draw. Accepts 2dCanvasContext as a param.
      * @param FPS The FPS rate. Pass in an int - 30 for 30 FPS.
      */
-	constructor(canvasId, fps, callback, ...args) {
+	constructor(canvasId: string, fps: number, callback: any, ...args: any[]) {
 		this.canvasEl = document.getElementById(canvasId);
 		this.ctx = this.canvasEl.getContext('2d');
 		this.canvasHeight = this.canvasEl.height;
@@ -16,69 +26,76 @@ class Animator {
 		this.callback = callback;
 		this.fps = this.setFPS(fps);
 		this.args = args;
-		self = this; // retain reference
 	}
 
 	/**
      * @description Draws.
      * @param runningTime precise time
      */
-	animate(runningTime) {
-		if (!self.stopped) {
-			if (!self.lastDraw) {
-				self.lastDraw = runningTime;
+	animate = (runningTime: number) => {
+		if (!this.stopped) {
+			if (!this.lastDraw) {
+				this.lastDraw = runningTime;
 			}
-			let diff = runningTime - self.lastDraw;
+			let diff = runningTime - this.lastDraw;
 
-			if (diff / self.fps > 1) {
+			if (diff / this.fps > 1) {
 				// Clear before redraw
-				self.ctx.clearRect(0, 0, self.canvasEl.width, self.canvasEl.height);
+				this.ctx.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
 
 				// Run the callback function to draw
-				self.callback(self.ctx, self, ...self.args);
-				self.lastDraw = runningTime;
+				this.callback(this.ctx, this, ...this.args);
+				this.lastDraw = runningTime;
 			}
 		}
-		requestAnimationFrame(self.animate);
+		requestAnimationFrame(this.animate);
 	}
 
-	stopAnimating() {
-		self.stopped = true;
+	stopAnimating = () => {
+		this.stopped = true;
 	}
 
-	resumeAnimating() {
-		self.stopped = false;
+	resumeAnimating = () => {
+		this.stopped = false;
 	}
 
-	isStopped() {
-		return self.stopped;
+	isStopped = () => {
+		return this.stopped;
 	}
 
-	getFPS() {
-		return 1000 / self.fps;
+	getFPS = () => {
+		return 1000 / this.fps;
 	}
 
-	setFPS(fps) {
-		self.fps = 1000 / fps;
-		return self.fps;
+	setFPS = (fps: number) => {
+		this.fps = 1000 / fps;
+		return this.fps;
 	}
 }
 
-class Point {
-	constructor(x, y) {
+export class Point {
+
+	x: number;
+	y: number;
+
+	constructor(x: number, y: number) {
 		this.x = x;
 		this.y = y;
 	}
 }
 
-class Circle extends Point {
-	constructor(x, y, radius, color) {
+export class Circle extends Point {
+
+	radius: number;
+	color: string;
+
+	constructor(x: number, y: number, radius: number, color: string) {
 		super(x, y);
 		this.radius = radius;
 		this.color = color;
 	}
 
-	draw(ctx) {
+	draw = (ctx: CanvasRenderingContext2D) => {
 		ctx.beginPath();
 		ctx.fillStyle = this.color;
 		ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
@@ -86,14 +103,19 @@ class Circle extends Point {
 	}
 }
 
-class Line {
-	constructor(path, width, color) {
+export class Line {
+
+	path: Point[];
+	width: number;
+	color: string;
+
+	constructor(path: Point[], width: number, color: string) {
 		this.path = path;
 		this.width = width;
 		this.color = color;
 	}
 
-	draw(ctx) {
+	draw = (ctx: CanvasRenderingContext2D) => {
 		for (let i = 0; i + 1 < this.path.length; i++) {
 			let point1 = this.path[i];
 			let point2 = this.path[i + 1];
@@ -106,7 +128,7 @@ class Line {
 		}
 	}
 
-	appendPoint(point) {
+	appendPoint = (point: Point) => {
 		this.path.push(point);
 	}
 }
