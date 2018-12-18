@@ -32,7 +32,7 @@ export class Animator {
      * @description Draws.
      * @param runningTime precise time
      */
-	animate = (runningTime: number) => {
+	animate = (runningTime: number = 0) => {
 		if (!this.stopped) {
 			if (!this.lastDraw) {
 				this.lastDraw = runningTime;
