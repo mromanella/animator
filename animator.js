@@ -109,4 +109,12 @@ class Line {
 	appendPoint(point) {
 		this.path.push(point);
 	}
+
+	popPoint(index) {
+		if (index != null || index != undefined) {
+			return this.path.splice(index, 1)[0];
+		} else {
+			return this.path.pop();
+		}
+	}
 }

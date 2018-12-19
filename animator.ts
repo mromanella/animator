@@ -131,4 +131,12 @@ export class Line {
 	appendPoint = (point: Point) => {
 		this.path.push(point);
 	}
+
+	popPoint = (index: number = -1): Point => {
+		if (index >= 0) {
+			return this.path.splice(index, 1)[0];
+		} else {
+			return this.path.pop();
+		}
+	}
 }
