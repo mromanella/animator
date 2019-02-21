@@ -4,11 +4,11 @@ export class Animator {
 	ctx: CanvasRenderingContext2D;
 	canvasHeight: number;
 	canvasWidth: number;
-	lastDraw: any;
-	stopped: boolean;
-	callback: any;
-	fps: number;
-	args: any[];
+	private lastDraw: any;
+	private paused: boolean;
+	private callback: any;
+	private fps: number;
+	private args: any[];
 
 	/**
      * @description Creates an animator class.
@@ -16,24 +16,25 @@ export class Animator {
      * @param callbackFunc The function to perform on every draw. Accepts 2dCanvasContext as a param.
      * @param FPS The FPS rate. Pass in an int - 30 for 30 FPS.
      */
-	constructor(canvasId: string, fps: number, callback: any, ...args: any[]) {
+	constructor(canvasId: string, fps: number, callback: any, startPaused: boolean = false, ...args: any[]) {
 		this.canvasEl = document.getElementById(canvasId);
 		this.ctx = this.canvasEl.getContext('2d');
 		this.canvasHeight = this.canvasEl.height;
 		this.canvasWidth = this.canvasEl.width;
 		this.lastDraw = false;
-		this.stopped = false;
+		this.paused = startPaused;
 		this.callback = callback;
 		this.fps = this.setFPS(fps);
 		this.args = args;
+		this.animate();
 	}
 
 	/**
      * @description Draws.
      * @param runningTime precise time
      */
-	animate = (runningTime: number = 0) => {
-		if (!this.stopped) {
+	private animate = (runningTime: number = 0) => {
+		if (!this.paused) {
 			if (!this.lastDraw) {
 				this.lastDraw = runningTime;
 			}
@@ -47,20 +48,21 @@ export class Animator {
 				this.callback(this.ctx, this, ...this.args);
 				this.lastDraw = runningTime;
 			}
+			requestAnimationFrame(this.animate);
 		}
-		requestAnimationFrame(this.animate);
 	}
 
-	stopAnimating = () => {
-		this.stopped = true;
+	pause = () => {
+		this.paused = true;
 	}
 
-	resumeAnimating = () => {
-		this.stopped = false;
+	resume = () => {
+		this.paused = false;
+		this.animate();
 	}
 
-	isStopped = () => {
-		return this.stopped;
+	isPaused = () => {
+		return this.paused;
 	}
 
 	getFPS = () => {
@@ -82,15 +84,70 @@ export class Point {
 		this.x = x;
 		this.y = y;
 	}
+
+	copy = (): Point => {
+		return new Point(this.x, this.y);
+	}
+
+	distance = (other: Point): number => {
+		return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
+	}
+
+	magnitude = (): number => {
+		return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+	}
+
+	direction = (): Point => {
+		let magnitude = this.magnitude();
+		return this.divide(magnitude);
+	}
+
+	diff = (other: number | Point): Point => {
+		if (typeof other == 'number') {
+			return new Point(this.x - other, this.y - other);
+		}
+		if (other instanceof Point) {
+			return new Point(this.x - other.x, this.y - other.y);
+		}
+
+	}
+
+	add = (other: number | Point): Point => {
+		if (typeof other == 'number') {
+			return new Point(this.x + other, this.y + other);
+		}
+		if (other instanceof Point) {
+			return new Point(this.x + other.x, this.y + other.y);
+		}
+	}
+
+	multiply = (other: number | Point): Point => {
+		if (typeof other == 'number') {
+			return new Point(this.x * other, this.y * other);
+		}
+		if (other instanceof Point) {
+			return new Point(this.x * other.x, this.y * other.y);
+		}
+	}
+
+	divide = (other: number | Point): Point => {
+		if (typeof other == 'number') {
+			return new Point(this.x / other, this.y / other);
+		}
+		if (other instanceof Point) {
+			return new Point(this.x / other.x, this.y / other.y);
+		}
+	}
 }
 
-export class Circle extends Point {
+export class Circle {
 
+	location: Point;
 	radius: number;
 	color: string;
 
-	constructor(x: number, y: number, radius: number, color: string) {
-		super(x, y);
+	constructor(location: Point, radius: number, color: string) {
+		this.location = location;
 		this.radius = radius;
 		this.color = color;
 	}
@@ -98,7 +155,7 @@ export class Circle extends Point {
 	draw = (ctx: CanvasRenderingContext2D) => {
 		ctx.beginPath();
 		ctx.fillStyle = this.color;
-		ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
+		ctx.arc(this.location.x, this.location.y, this.radius, 0, 2 * Math.PI, false);
 		ctx.fill();
 	}
 }
