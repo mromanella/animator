@@ -75,6 +75,20 @@ export class Animator {
 	}
 }
 
+export class BoundingBox {
+	xMin: number;
+	yMin: number;
+	xMax: number;
+	yMax: number;
+
+	constructor(xMin: number, yMin: number, xMax: number, yMax: number) {
+		this.xMin = xMin;
+		this.yMin = yMin;
+		this.xMax = xMax;
+		this.yMax = yMax;
+	}
+}
+
 export class Point {
 
 	x: number;
@@ -87,6 +101,10 @@ export class Point {
 
 	copy = (): Point => {
 		return new Point(this.x, this.y);
+	}
+
+	midpoint = (other: Point): Point => {
+		return new Point((this.x + other.x) / 2, (this.y + other.y) / 2);
 	}
 
 	distance = (other: Point): number => {
@@ -146,17 +164,48 @@ export class Circle {
 	radius: number;
 	color: string;
 
+	/**
+	 * Initializes a Circle
+	 * @param location Starting location of the cirle.
+	 * @param radius Radious
+	 * @param color Color
+	 */
 	constructor(location: Point, radius: number, color: string) {
 		this.location = location;
 		this.radius = radius;
 		this.color = color;
 	}
 
-	draw = (ctx: CanvasRenderingContext2D) => {
+	draw = (ctx: CanvasRenderingContext2D, fill: boolean = false, drawBB: boolean = false) => {
 		ctx.beginPath();
-		ctx.fillStyle = this.color;
 		ctx.arc(this.location.x, this.location.y, this.radius, 0, 2 * Math.PI, false);
-		ctx.fill();
+		if (fill) {
+			ctx.fillStyle = this.color;
+			ctx.fill();
+		} else {
+			ctx.strokeStyle = this.color;
+			ctx.stroke();
+		}
+
+		if (drawBB) {
+			ctx.beginPath();
+			ctx.strokeStyle = 'red';
+			let bb = this.getBoundingBox();
+			let diameter = this.getDiameter()
+			ctx.strokeRect(bb.xMin, bb.yMin, diameter, diameter);
+		}
+	}
+
+	getBoundingBox = (): BoundingBox => {
+		let xMin = this.location.x - this.radius;
+		let yMin = this.location.y - this.radius;
+		let xMax = this.location.x + this.radius;
+		let yMax = this.location.y + this.radius;
+		return new BoundingBox(xMin, yMin, xMax, yMax);
+	}
+
+	getDiameter = () => {
+		return this.radius * 2;
 	}
 }
 
@@ -166,23 +215,50 @@ export class Line {
 	width: number;
 	color: string;
 
+	/**
+	 * Creates a Line
+	 * @param path List of points to initialize the line.
+	 * @param width Width of the line.
+	 * @param color Color of the line.
+	 */
 	constructor(path: Point[], width: number, color: string) {
 		this.path = path;
 		this.width = width;
 		this.color = color;
 	}
 
-	draw = (ctx: CanvasRenderingContext2D) => {
-		for (let i = 0; i + 1 < this.path.length; i++) {
-			let point1 = this.path[i];
-			let point2 = this.path[i + 1];
-			ctx.beginPath();
-			ctx.moveTo(point1.x, point1.y);
-			ctx.lineWidth = this.width;
-			ctx.strokeStyle = this.color;
+	draw = (ctx: CanvasRenderingContext2D, drawBB: boolean = false) => {
+		ctx.beginPath();
+		let point1 = this.path[0];
+		ctx.moveTo(point1.x, point1.y);
+		for (let i = 1; i < this.path.length; i++) {
+			let point2 = this.path[i];
 			ctx.lineTo(point2.x, point2.y);
-			ctx.stroke();
 		}
+
+		ctx.lineWidth = this.width;
+		ctx.strokeStyle = this.color;
+		ctx.stroke();
+
+		if (drawBB) {
+			ctx.beginPath();
+			ctx.strokeStyle = 'red';
+			let bb = this.getBoundingBox();
+			ctx.strokeRect(bb.xMin, bb.yMin, this.width / 2, this.width / 2);
+		}
+	}
+
+	getBoundingBox = () => {
+		let pt = this.path[0];
+		let pt1 = pt.diff(this.width / 2);
+		let pt2 = pt.add(this.width / 2);
+		return new BoundingBox(pt1.x, pt1.y, pt2.x, pt2.y);
+	}
+
+	getMidpoint = (pos1: number, pos2: number): Point => {
+		let ptA = this.path[pos1];
+		let ptB = this.path[pos2];
+		return ptA.midpoint(ptB);
 	}
 
 	appendPoint = (point: Point) => {
@@ -194,6 +270,46 @@ export class Line {
 			return this.path.splice(index, 1)[0];
 		} else {
 			return this.path.pop();
+		}
+	}
+}
+
+export class Triangle extends Line {
+	/**
+	 * Not yet working
+	 * @param path
+	 * @param width
+	 * @param color
+	 */
+
+	constructor(path: Point[], width: number, color: string) {
+		super(path, width, color);
+	}
+
+	draw = (ctx: CanvasRenderingContext2D, fill: boolean = false, drawBB: boolean = false) => {
+		ctx.beginPath();
+		let point1 = this.path[0];
+		ctx.moveTo(point1.x, point1.y);
+		for (let i = 1; i < this.path.length; i++) {
+			let point2 = this.path[i];
+			ctx.lineTo(point2.x, point2.y);
+		}
+
+		ctx.lineWidth = this.width;
+		ctx.closePath();
+		if (fill) {
+			ctx.fillStyle = this.color;
+			ctx.fill();
+		} else {
+			ctx.strokeStyle = this.color;
+			ctx.stroke();
+		}
+
+		if (drawBB) {
+			ctx.beginPath();
+			ctx.strokeStyle = 'red';
+			let bb = this.getBoundingBox();
+			ctx.strokeRect(bb.xMin, bb.yMin, this.width / 2, this.width / 2);
 		}
 	}
 }
