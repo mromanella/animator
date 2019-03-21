@@ -313,3 +313,30 @@ export class Triangle extends Line {
 		}
 	}
 }
+
+export class Rectangle {
+
+	location: Point;
+	width: number;
+	height: number;
+	color: string;
+
+	constructor(location: Point, width: number, height: number, color: string) {
+		this.location = location;
+		this.width = width;
+		this.height = height;
+		this.color = color;
+	}
+
+
+	draw = (ctx: CanvasRenderingContext2D, fill: boolean = false, drawBB: boolean = false) => {
+		ctx.beginPath();
+		if (fill) {
+			ctx.fillStyle = this.color;
+			ctx.fillRect(this.location.x, this.location.y, this.width, this.height);
+		} else {
+			ctx.strokeStyle = this.color;
+			ctx.strokeRect(this.location.x, this.location.y, this.width, this.height);
+		}
+	}
+}
