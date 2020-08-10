@@ -170,7 +170,7 @@ export class Circle extends Point {
 	 * @param radius Radious
 	 * @param color Color
 	 */
-	constructor(x, y, radius: number, color: string) {
+	constructor(x: number, y: number, radius: number, color: string) {
 		super(x, y);
 		this.radius = radius;
 		this.color = color;
