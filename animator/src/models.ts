@@ -158,27 +158,27 @@ export class Point {
 	}
 }
 
-export class Circle {
+export class Circle extends Point {
 
-	location: Point;
+	x: number;
+	y: number;
 	radius: number;
 	color: string;
 
 	/**
 	 * Initializes a Circle
-	 * @param location Starting location of the cirle.
 	 * @param radius Radious
 	 * @param color Color
 	 */
-	constructor(location: Point, radius: number, color: string) {
-		this.location = location;
+	constructor(x, y, radius: number, color: string) {
+		super(x, y);
 		this.radius = radius;
 		this.color = color;
 	}
 
 	draw = (ctx: CanvasRenderingContext2D, fill: boolean = false, drawBB: boolean = false) => {
 		ctx.beginPath();
-		ctx.arc(this.location.x, this.location.y, this.radius, 0, 2 * Math.PI, false);
+		ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
 		if (fill) {
 			ctx.fillStyle = this.color;
 			ctx.fill();
@@ -197,10 +197,10 @@ export class Circle {
 	}
 
 	getBoundingBox = (): BoundingBox => {
-		let xMin = this.location.x - this.radius;
-		let yMin = this.location.y - this.radius;
-		let xMax = this.location.x + this.radius;
-		let yMax = this.location.y + this.radius;
+		let xMin = this.x - this.radius;
+		let yMin = this.y - this.radius;
+		let xMax = this.x + this.radius;
+		let yMax = this.y + this.radius;
 		return new BoundingBox(xMin, yMin, xMax, yMax);
 	}
 
@@ -314,15 +314,16 @@ export class Triangle extends Line {
 	}
 }
 
-export class Rectangle {
+export class Rectangle extends Point {
 
-	location: Point;
+	x: number;
+	y: number;
 	width: number;
 	height: number;
 	color: string;
 
-	constructor(location: Point, width: number, height: number, color: string) {
-		this.location = location;
+	constructor(x: number, y: number, width: number, height: number, color: string) {
+		super(x, y);
 		this.width = width;
 		this.height = height;
 		this.color = color;
@@ -333,10 +334,10 @@ export class Rectangle {
 		ctx.beginPath();
 		if (fill) {
 			ctx.fillStyle = this.color;
-			ctx.fillRect(this.location.x, this.location.y, this.width, this.height);
+			ctx.fillRect(this.x, this.y, this.width, this.height);
 		} else {
 			ctx.strokeStyle = this.color;
-			ctx.strokeRect(this.location.x, this.location.y, this.width, this.height);
+			ctx.strokeRect(this.x, this.y, this.width, this.height);
 		}
 	}
 }
