@@ -21,13 +21,13 @@ export default class Key {
 
     runOnKeyPress = () => {
         for (let func of this.onKeyPress) {
-            func();
+            func(this);
         }
     }
 
     runOnKeyRelease = () => {
         for (let func of this.onKeyRelease) {
-            func();
+            func(this);
         }
     }
 
