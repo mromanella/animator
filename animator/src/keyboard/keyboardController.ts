@@ -47,7 +47,7 @@ export class KeyboardController {
         if (this.keyboardKeys.has(keyName)) {
             // Remove the old one and return it
             // Overwrite with new
-            let oldKey = this.keyboardKeys.get(keyName);
+            const oldKey = this.keyboardKeys.get(keyName);
             this.keyboardKeys.delete(keyName);
             return oldKey;
         }
@@ -68,8 +68,8 @@ export class KeyboardController {
     keyCapture = (keyEvent: KeyboardEvent) => {
         keyEvent.preventDefault();
         keyEvent.stopImmediatePropagation();
-        let keyName = keyEvent.key;
-        let keyObj = this.getKey(keyName);
+        const keyName = keyEvent.key;
+        const keyObj = this.getKey(keyName);
         if (keyObj) {
             if (keyEvent.type == 'keypress' || keyEvent.type == 'keydown') {
                 keyObj.setPressed(true);
@@ -91,9 +91,9 @@ export class KeyboardController {
      * @returns A list of Key objects that are currently pressed.
      */
     getPressedKeys = (): Key[] => {
-        let pressed = [];
+        const pressed = [];
         for (let key of this.keyboardKeys.values()) {
-            if (key.isPressed) {
+            if (key.isPressed()) {
                 pressed.push(key);
             }
         }
@@ -104,7 +104,7 @@ export class KeyboardController {
      * @returns A list of the keyNames that are currently pressed.
      */
     getPressedKeysNames = (): string[] => {
-        let pressed = [];
+        const pressed = [];
         for (let key of this.getPressedKeys()) {
             pressed.push(key.keyName);
         }
@@ -120,6 +120,44 @@ export class KeyboardController {
             key.setPressed(false);
         }
     }
+
+    lockKey = (keyName: string) => {
+        const key = this.getKey(keyName);
+        if (key) {
+            key.setLocked(true);
+        }
+    }
+
+    unLockKey = (keyName: string) => {
+        const key = this.getKey(keyName);
+        if (key) {
+            key.setLocked(false);
+        }
+    }
+
+    getLockedKeys = (): Key[] => {
+        const keys = [];
+        for (let key of this.keyboardKeys.values()) {
+            if (key.isLocked()) {
+                keys.push(key);
+            }
+        }
+        return keys;
+    }
+
+    getLockedKeyNames = (): string[] => {
+        const keys = [];
+        for (let key of this.getLockedKeys()) {
+            keys.push(key.keyName);
+        }
+        return keys;
+    }
+
+    unlockAllLockedKeys = () => {
+        for (let key of this.getLockedKeys()) {
+            key.setLocked(false);
+        }
+    }
 }
 
 export const getPlayerKeyboardController = (keyboardKeys: Key[]): KeyboardController => {
@@ -133,7 +171,7 @@ export const getPlayerKeyboardController = (keyboardKeys: Key[]): KeyboardContro
 
 export const updatePressCounts = (kbController: KeyboardController, keyPressCounts: any) => {
     for (let key of kbController.getAllKeys()) {
-        if (key.isPressed) {
+        if (key.isPressed()) {
             keyPressCounts[key.keyName]++;
         } else {
             if (keyPressCounts[key.keyName] > 0) {

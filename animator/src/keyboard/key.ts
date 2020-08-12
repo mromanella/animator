@@ -1,14 +1,26 @@
 
 export default class Key {
     keyName: string;
-    onKeyPress: Function[];
-    onKeyRelease: Function[];
-    isPressed: boolean;
+    private onKeyPress: Function[] = [];
+    private onKeyRelease: Function[] = [];
+    private pressed: boolean = false;
+    private locked: boolean = false;
     constructor(keyName: string, onKeyPress: Function[] = [], onKeyRelease: Function[] = []) {
         this.keyName = keyName;
         this.onKeyPress = onKeyPress;
         this.onKeyRelease = onKeyRelease;
-        this.isPressed = false;
+    }
+
+    private runOnKeyPress = () => {
+        for (let func of this.onKeyPress) {
+            func(this);
+        }
+    }
+
+    private runOnKeyRelease = () => {
+        for (let func of this.onKeyRelease) {
+            func(this);
+        }
     }
 
     addKeyPress = (func: Function) => {
@@ -19,33 +31,36 @@ export default class Key {
         this.onKeyRelease.push(func);
     }
 
-    runOnKeyPress = () => {
-        for (let func of this.onKeyPress) {
-            func(this);
-        }
-    }
-
-    runOnKeyRelease = () => {
-        for (let func of this.onKeyRelease) {
-            func(this);
-        }
-    }
-
     run = () => {
-        if (this.isPressed) {
-            this.runOnKeyPress();
-        } else {
-            this.runOnKeyRelease();
+        if (!this.isLocked()) {
+            if (this.pressed) {
+                this.runOnKeyPress();
+            } else {
+                this.runOnKeyRelease();
+            }
         }
     }
 
-    togglePressed = () => {
-        this.isPressed = !this.isPressed;
+    togglePressed = (): boolean => {
+        this.pressed = !this.pressed;
+        this.run();
+        return this.isPressed();
+    }
+
+    setPressed = (isPressed: boolean) => {
+        this.pressed = isPressed;
         this.run();
     }
 
-    setPressed(isPressed: boolean) {
-        this.isPressed = isPressed;
-        this.run();
+    isPressed = (): boolean => {
+        return this.pressed;
+    }
+
+    setLocked = (isLocked: boolean) => {
+        this.locked = isLocked;
+    }
+
+    isLocked = (): boolean => {
+        return this.locked;
     }
 }
