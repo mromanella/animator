@@ -103,6 +103,10 @@ export class Point {
 		return new Point(this.x, this.y);
 	}
 
+	equals = (other: Point): boolean => {
+		return (this.x === other.x && this.y === other.y);
+	}
+
 	midpoint = (other: Point): Point => {
 		return new Point((this.x + other.x) / 2, (this.y + other.y) / 2);
 	}
@@ -174,6 +178,10 @@ export class Circle extends Point {
 		super(x, y);
 		this.radius = radius;
 		this.color = color;
+	}
+
+	equals = (other: Circle): boolean => {
+		return super.equals(other) && (this.radius === other.radius);
 	}
 
 	draw = (ctx: CanvasRenderingContext2D, fill: boolean = false, drawBB: boolean = false) => {
@@ -329,6 +337,9 @@ export class Rectangle extends Point {
 		this.color = color;
 	}
 
+	equals = (other: Rectangle): boolean => {
+		return super.equals(other) && (this.width === other.width && this.height === other.height);
+	}
 
 	draw = (ctx: CanvasRenderingContext2D, fill: boolean = false, drawBB: boolean = false) => {
 		ctx.beginPath();
