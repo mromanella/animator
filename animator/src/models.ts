@@ -339,5 +339,20 @@ export class Rectangle extends Point {
 			ctx.strokeStyle = this.color;
 			ctx.strokeRect(this.x, this.y, this.width, this.height);
 		}
+
+		if (drawBB) {
+			ctx.beginPath();
+			ctx.strokeStyle = 'red';
+			let bb = this.getBoundingBox();
+			ctx.strokeRect(bb.xMin, bb.yMin, this.width, this.height);
+		}
+	}
+
+	getBoundingBox = (): BoundingBox => {
+		let xMin = this.x;
+		let yMin = this.y;
+		let xMax = this.x + this.width;
+		let yMax = this.y + this.height;
+		return new BoundingBox(xMin, yMin, xMax, yMax);
 	}
 }
