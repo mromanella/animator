@@ -158,15 +158,18 @@ export class KeyboardController {
             key.setLocked(false);
         }
     }
-}
 
-export const getPlayerKeyboardController = (keyboardKeys: Key[]): KeyboardController => {
-    const playerKbController = new KeyboardController(keyboardKeys);
-
-    addEventListener('keydown', playerKbController.keyCapture, true);
-    addEventListener('keypress', playerKbController.keyCapture, true);
-    addEventListener('keyup', playerKbController.keyCapture, true);
-    return playerKbController;
+    listen = () => {
+        addEventListener('keydown', this.keyCapture, true);
+        addEventListener('keypress', this.keyCapture, true);
+        addEventListener('keyup', this.keyCapture, true);
+    }
+    
+    stopListening = () => {
+        removeEventListener('keydown', this.keyCapture, true);
+        removeEventListener('keypress', this.keyCapture, true);
+        removeEventListener('keyup', this.keyCapture, true);
+    }
 }
 
 export const updatePressCounts = (kbController: KeyboardController, keyPressCounts: any) => {

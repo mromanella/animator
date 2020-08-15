@@ -75,6 +75,12 @@ export class Animator {
 	}
 }
 
+export interface GameObject {
+	
+	getBoundingBox: Function
+
+}
+
 export class BoundingBox {
 	xMin: number;
 	yMin: number;
@@ -162,7 +168,7 @@ export class Point {
 	}
 }
 
-export class Circle extends Point {
+export class Circle extends Point implements GameObject {
 
 	x: number;
 	y: number;
@@ -217,7 +223,7 @@ export class Circle extends Point {
 	}
 }
 
-export class Line {
+export class Line implements GameObject {
 
 	path: Point[];
 	width: number;
@@ -322,7 +328,7 @@ export class Triangle extends Line {
 	}
 }
 
-export class Rectangle extends Point {
+export class Rectangle extends Point implements GameObject {
 
 	x: number;
 	y: number;
