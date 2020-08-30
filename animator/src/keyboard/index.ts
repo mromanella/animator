@@ -18,7 +18,7 @@ export const unlockKeys = (keys: Key[]) => {
     }
 }
 
-export const getKeyboardController = (keys: Key[]): KeyboardController => {
+export const getKeyboardController = (keys: Key[] = []): KeyboardController => {
     if (!controller) {
         controller = new KeyboardController([]);
     }

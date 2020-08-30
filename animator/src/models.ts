@@ -1,6 +1,6 @@
 export class Animator {
 
-	canvasEl: any;
+	canvasEl: HTMLCanvasElement;
 	ctx: CanvasRenderingContext2D;
 	canvasHeight: number;
 	canvasWidth: number;
@@ -9,6 +9,7 @@ export class Animator {
 	private callback: any;
 	private fps: number;
 	private args: any[];
+	private handle: number;
 
 	/**
      * @description Creates an animator class.
@@ -17,7 +18,7 @@ export class Animator {
      * @param FPS The FPS rate. Pass in an int - 30 for 30 FPS.
      */
 	constructor(canvasId: string, fps: number, callback: any, startPaused: boolean = false, ...args: any[]) {
-		this.canvasEl = document.getElementById(canvasId);
+		this.canvasEl = document.querySelector(`#${canvasId}`);
 		this.ctx = this.canvasEl.getContext('2d');
 		this.canvasHeight = this.canvasEl.height;
 		this.canvasWidth = this.canvasEl.width;
@@ -48,7 +49,7 @@ export class Animator {
 				this.callback(this.ctx, this, ...this.args);
 				this.lastDraw = runningTime;
 			}
-			requestAnimationFrame(this.animate);
+			this.handle = requestAnimationFrame(this.animate);
 		}
 	}
 
@@ -63,6 +64,10 @@ export class Animator {
 
 	isPaused = () => {
 		return this.paused;
+	}
+
+	stop = () => {
+		cancelAnimationFrame(this.handle);
 	}
 
 	getFPS = () => {
