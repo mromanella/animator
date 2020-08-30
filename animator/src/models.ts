@@ -68,6 +68,7 @@ export class Animator {
 
 	stop = () => {
 		cancelAnimationFrame(this.handle);
+		this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 	}
 
 	getFPS = () => {
