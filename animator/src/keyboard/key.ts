@@ -11,27 +11,27 @@ export default class Key {
         this.onKeyRelease = onKeyRelease;
     }
 
-    private runOnKeyPress = () => {
+    private runOnKeyPress() {
         for (let func of this.onKeyPress) {
             func(this);
         }
     }
 
-    private runOnKeyRelease = () => {
+    private runOnKeyRelease() {
         for (let func of this.onKeyRelease) {
             func(this);
         }
     }
 
-    addKeyPress = (func: Function) => {
+    addKeyPress(func: Function) {
         this.onKeyPress.push(func);
     }
 
-    addKeyRelease = (func: Function) => {
+    addKeyRelease(func: Function) {
         this.onKeyRelease.push(func);
     }
 
-    run = () => {
+    run() {
         if (!this.isLocked()) {
             if (this.pressed) {
                 this.runOnKeyPress();
@@ -41,26 +41,26 @@ export default class Key {
         }
     }
 
-    togglePressed = (): boolean => {
+    togglePressed(): boolean {
         this.pressed = !this.pressed;
         this.run();
         return this.isPressed();
     }
 
-    setPressed = (isPressed: boolean) => {
+    setPressed(isPressed: boolean) {
         this.pressed = isPressed;
         this.run();
     }
 
-    isPressed = (): boolean => {
+    isPressed(): boolean {
         return this.pressed;
     }
 
-    setLocked = (isLocked: boolean) => {
+    setLocked(isLocked: boolean) {
         this.locked = isLocked;
     }
 
-    isLocked = (): boolean => {
+    isLocked(): boolean {
         return this.locked;
     }
 }

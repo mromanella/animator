@@ -14,13 +14,16 @@ export class KeyboardController {
             this.keyboardKeys.set(key.keyName, key);
         }
         this.clearAllPresses();
+        this.keyCapture = this.keyCapture.bind(this);
+        this.listen = this.listen.bind(this);
+        this.stopListening = this.stopListening.bind(this);
     }
 
     /**
      * @param keyName
      * @returns true if the KeyboardController is watching for keyName else false.
      */
-    hasKey = (keyName: string): boolean => {
+    hasKey(keyName: string): boolean {
         return this.keyboardKeys.has(keyName);
     }
 
@@ -30,7 +33,7 @@ export class KeyboardController {
      * with the new.
      * @param key
      */
-    addKey = (key: Key) => {
+    addKey(key: Key) {
         const keyName = key.keyName;
         // Remove if already found and overwrite
         this.removeKey(keyName);
@@ -43,7 +46,7 @@ export class KeyboardController {
      * @param keyName
      * @returns The Key object which was removed or null.
      */
-    removeKey = (keyName: string): Key | null => {
+    removeKey(keyName: string): Key | null {
         if (this.keyboardKeys.has(keyName)) {
             // Remove the old one and return it
             // Overwrite with new
@@ -58,14 +61,14 @@ export class KeyboardController {
      * @param keyName
      * @returns The Key object associated to the keyName or null if not found.
      */
-    getKey = (keyName: string): Key | null => {
+    getKey(keyName: string): Key | null {
         if (this.hasKey(keyName)) {
             return this.keyboardKeys.get(keyName);
         }
         return null;
     }
 
-    keyCapture = (keyEvent: KeyboardEvent) => {
+    keyCapture(keyEvent: KeyboardEvent) {
         keyEvent.preventDefault();
         keyEvent.stopImmediatePropagation();
         const keyName = keyEvent.key;
@@ -83,14 +86,14 @@ export class KeyboardController {
     /**
      * @returns The list of defined Key objects.
      */
-    getAllKeys = (): Key[] => {
+    getAllKeys(): Key[] {
         return [...this.keyboardKeys.values()];
     }
 
     /**
      * @returns A list of Key objects that are currently pressed.
      */
-    getPressedKeys = (): Key[] => {
+    getPressedKeys(): Key[] {
         const pressed = [];
         for (let key of this.keyboardKeys.values()) {
             if (key.isPressed()) {
@@ -103,7 +106,7 @@ export class KeyboardController {
     /**
      * @returns A list of the keyNames that are currently pressed.
      */
-    getPressedKeysNames = (): string[] => {
+    getPressedKeysNames(): string[] {
         const pressed = [];
         for (let key of this.getPressedKeys()) {
             pressed.push(key.keyName);
@@ -115,27 +118,27 @@ export class KeyboardController {
      * Sets the value of isPressed for each Key to false.
      * Runs the onKeyRelease functions associated to each key
      */
-    clearAllPresses = () => {
+    clearAllPresses() {
         for (let key of this.keyboardKeys.values()) {
             key.setPressed(false);
         }
     }
 
-    lockKey = (keyName: string) => {
+    lockKey(keyName: string) {
         const key = this.getKey(keyName);
         if (key) {
             key.setLocked(true);
         }
     }
 
-    unLockKey = (keyName: string) => {
+    unLockKey(keyName: string) {
         const key = this.getKey(keyName);
         if (key) {
             key.setLocked(false);
         }
     }
 
-    getLockedKeys = (): Key[] => {
+    getLockedKeys(): Key[] {
         const keys = [];
         for (let key of this.keyboardKeys.values()) {
             if (key.isLocked()) {
@@ -145,7 +148,7 @@ export class KeyboardController {
         return keys;
     }
 
-    getLockedKeyNames = (): string[] => {
+    getLockedKeyNames(): string[] {
         const keys = [];
         for (let key of this.getLockedKeys()) {
             keys.push(key.keyName);
@@ -153,26 +156,26 @@ export class KeyboardController {
         return keys;
     }
 
-    unlockAllLockedKeys = () => {
+    unlockAllLockedKeys() {
         for (let key of this.getLockedKeys()) {
             key.setLocked(false);
         }
     }
 
-    listen = () => {
+    listen() {
         addEventListener('keydown', this.keyCapture, true);
         addEventListener('keypress', this.keyCapture, true);
         addEventListener('keyup', this.keyCapture, true);
     }
-    
-    stopListening = () => {
+
+    stopListening() {
         removeEventListener('keydown', this.keyCapture, true);
         removeEventListener('keypress', this.keyCapture, true);
         removeEventListener('keyup', this.keyCapture, true);
     }
 }
 
-export const updatePressCounts = (kbController: KeyboardController, keyPressCounts: any) => {
+export function updatePressCounts(kbController: KeyboardController, keyPressCounts: any) {
     for (let key of kbController.getAllKeys()) {
         if (key.isPressed()) {
             keyPressCounts[key.keyName]++;

@@ -12,11 +12,11 @@ export class Animator {
 	private handle: number;
 
 	/**
-     * @description Creates an animator class.
-     * @param canvasId The HTML ID for the canvas element.
-     * @param callbackFunc The function to perform on every draw. Accepts 2dCanvasContext as a param.
-     * @param FPS The FPS rate. Pass in an int - 30 for 30 FPS.
-     */
+	 * @description Creates an animator class.
+	 * @param canvasId The HTML ID for the canvas element.
+	 * @param callbackFunc The function to perform on every draw. Accepts 2dCanvasContext as a param.
+	 * @param FPS The FPS rate. Pass in an int - 30 for 30 FPS.
+	 */
 	constructor(canvasId: string, fps: number, callback: any, startPaused: boolean = false, ...args: any[]) {
 		this.canvasEl = document.querySelector(`#${canvasId}`);
 		this.ctx = this.canvasEl.getContext('2d');
@@ -27,14 +27,16 @@ export class Animator {
 		this.callback = callback;
 		this.fps = this.setFPS(fps);
 		this.args = args;
+
+		this.animate = this.animate.bind(this);
 		this.animate();
 	}
 
 	/**
-     * @description Draws.
-     * @param runningTime precise time
-     */
-	private animate = (runningTime: number = 0) => {
+	 * @description Draws.
+	 * @param runningTime precise time
+	 */
+	private animate(runningTime: number = 0) {
 		if (!this.paused) {
 			if (!this.lastDraw) {
 				this.lastDraw = runningTime;
@@ -53,36 +55,36 @@ export class Animator {
 		}
 	}
 
-	pause = () => {
+	pause() {
 		this.paused = true;
 	}
 
-	resume = () => {
+	resume() {
 		this.paused = false;
 		this.animate();
 	}
 
-	isPaused = () => {
+	isPaused() {
 		return this.paused;
 	}
 
-	stop = () => {
+	stop() {
 		cancelAnimationFrame(this.handle);
 		this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 	}
 
-	getFPS = () => {
+	getFPS() {
 		return 1000 / this.fps;
 	}
 
-	setFPS = (fps: number) => {
+	setFPS(fps: number) {
 		this.fps = 1000 / fps;
 		return this.fps;
 	}
 }
 
 export interface GameObject {
-	
+
 	getBoundingBox: Function
 
 }
@@ -111,32 +113,32 @@ export class Point {
 		this.y = y;
 	}
 
-	copy = (): Point => {
+	copy(): Point {
 		return new Point(this.x, this.y);
 	}
 
-	equals = (other: Point): boolean => {
+	equals(other: Point): boolean {
 		return (this.x === other.x && this.y === other.y);
 	}
 
-	midpoint = (other: Point): Point => {
+	midpoint(other: Point): Point {
 		return new Point((this.x + other.x) / 2, (this.y + other.y) / 2);
 	}
 
-	distance = (other: Point): number => {
+	distance(other: Point): number {
 		return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
 	}
 
-	magnitude = (): number => {
+	magnitude(): number {
 		return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
 	}
 
-	direction = (): Point => {
+	direction(): Point {
 		let magnitude = this.magnitude();
 		return this.divide(magnitude);
 	}
 
-	diff = (other: number | Point): Point => {
+	diff(other: number | Point): Point {
 		if (typeof other == 'number') {
 			return new Point(this.x - other, this.y - other);
 		}
@@ -146,7 +148,7 @@ export class Point {
 
 	}
 
-	add = (other: number | Point): Point => {
+	add(other: number | Point): Point {
 		if (typeof other == 'number') {
 			return new Point(this.x + other, this.y + other);
 		}
@@ -155,7 +157,7 @@ export class Point {
 		}
 	}
 
-	multiply = (other: number | Point): Point => {
+	multiply(other: number | Point): Point {
 		if (typeof other == 'number') {
 			return new Point(this.x * other, this.y * other);
 		}
@@ -164,7 +166,7 @@ export class Point {
 		}
 	}
 
-	divide = (other: number | Point): Point => {
+	divide(other: number | Point): Point {
 		if (typeof other == 'number') {
 			return new Point(this.x / other, this.y / other);
 		}
@@ -192,11 +194,11 @@ export class Circle extends Point implements GameObject {
 		this.color = color;
 	}
 
-	equals = (other: Circle): boolean => {
+	equals(other: Circle): boolean {
 		return super.equals(other) && (this.radius === other.radius);
 	}
 
-	draw = (ctx: CanvasRenderingContext2D, fill: boolean = false, drawBB: boolean = false) => {
+	draw(ctx: CanvasRenderingContext2D, fill: boolean = false, drawBB: boolean = false) {
 		ctx.beginPath();
 		ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
 		if (fill) {
@@ -216,7 +218,7 @@ export class Circle extends Point implements GameObject {
 		}
 	}
 
-	getBoundingBox = (): BoundingBox => {
+	getBoundingBox(): BoundingBox {
 		let xMin = this.x - this.radius;
 		let yMin = this.y - this.radius;
 		let xMax = this.x + this.radius;
@@ -224,7 +226,7 @@ export class Circle extends Point implements GameObject {
 		return new BoundingBox(xMin, yMin, xMax, yMax);
 	}
 
-	getDiameter = () => {
+	getDiameter() {
 		return this.radius * 2;
 	}
 }
@@ -247,7 +249,7 @@ export class Line implements GameObject {
 		this.color = color;
 	}
 
-	draw = (ctx: CanvasRenderingContext2D, drawBB: boolean = false) => {
+	draw(ctx: CanvasRenderingContext2D, drawBB: boolean = false) {
 		ctx.beginPath();
 		let point1 = this.path[0];
 		ctx.moveTo(point1.x, point1.y);
@@ -268,24 +270,24 @@ export class Line implements GameObject {
 		}
 	}
 
-	getBoundingBox = () => {
+	getBoundingBox() {
 		let pt = this.path[0];
 		let pt1 = pt.diff(this.width / 2);
 		let pt2 = pt.add(this.width / 2);
 		return new BoundingBox(pt1.x, pt1.y, pt2.x, pt2.y);
 	}
 
-	getMidpoint = (pos1: number, pos2: number): Point => {
+	getMidpoint(pos1: number, pos2: number): Point {
 		let ptA = this.path[pos1];
 		let ptB = this.path[pos2];
 		return ptA.midpoint(ptB);
 	}
 
-	appendPoint = (point: Point) => {
+	appendPoint(point: Point) {
 		this.path.push(point);
 	}
 
-	popPoint = (index: number = -1): Point => {
+	popPoint(index: number = -1): Point {
 		if (index >= 0) {
 			return this.path.splice(index, 1)[0];
 		} else {
@@ -306,7 +308,7 @@ export class Triangle extends Line {
 		super(path, width, color);
 	}
 
-	draw = (ctx: CanvasRenderingContext2D, fill: boolean = false, drawBB: boolean = false) => {
+	draw(ctx: CanvasRenderingContext2D, fill: boolean = false, drawBB: boolean = false) {
 		ctx.beginPath();
 		let point1 = this.path[0];
 		ctx.moveTo(point1.x, point1.y);
@@ -349,11 +351,11 @@ export class Rectangle extends Point implements GameObject {
 		this.color = color;
 	}
 
-	equals = (other: Rectangle): boolean => {
+	equals(other: Rectangle): boolean {
 		return super.equals(other) && (this.width === other.width && this.height === other.height);
 	}
 
-	draw = (ctx: CanvasRenderingContext2D, fill: boolean = false, drawBB: boolean = false) => {
+	draw(ctx: CanvasRenderingContext2D, fill: boolean = false, drawBB: boolean = false) {
 		ctx.beginPath();
 		if (fill) {
 			ctx.fillStyle = this.color;
@@ -371,7 +373,7 @@ export class Rectangle extends Point implements GameObject {
 		}
 	}
 
-	getBoundingBox = (): BoundingBox => {
+	getBoundingBox(): BoundingBox {
 		let xMin = this.x;
 		let yMin = this.y;
 		let xMax = this.x + this.width;

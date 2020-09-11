@@ -6,19 +6,19 @@ export { Key, KeyboardController, keyNames }
 
 let controller: KeyboardController = null;
 
-export const lockKeys = (keys: Key[]) => {
+export function lockKeys(keys: Key[]) {
     for (let key of keys) {
         key.setLocked(true);
     }
 }
 
-export const unlockKeys = (keys: Key[]) => {
+export function unlockKeys(keys: Key[]) {
     for (let key of keys) {
         key.setLocked(false);
     }
 }
 
-export const getKeyboardController = (keys: Key[] = []): KeyboardController => {
+export function getKeyboardController(keys: Key[] = []): KeyboardController {
     if (!controller) {
         controller = new KeyboardController([]);
     }
