@@ -44,12 +44,15 @@ function fadeOut(element: HTMLElement) {
     element.classList.add('fade-out');
 }
 
-function shake(element: HTMLElement) {
-    element.classList.add('shake');
+function shake(element: HTMLElement, inifinite: boolean = false) {
+    element.classList.add('shake-infinite');
+    if (!inifinite) {
+        setTimeout(removeShake, 400, element);
+    }
 }
 
 function removeShake(element: HTMLElement) {
-    element.classList.remove('shake');
+    element.classList.remove('shake-infinite');
 }
 
 export {
