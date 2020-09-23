@@ -1,7 +1,7 @@
 
 class EventController {
 
-    registeredEvents: Map<string, Map<string, any[]>> = new Map<string, Map<string, any[]>>();
+    private registeredEvents: Map<string, Map<string, any[]>> = new Map<string, Map<string, any[]>>();
 
     register(name: string, callback: Function, ...args: any[]) {
         const packed = [callback, ...args];

@@ -1,7 +1,7 @@
 class SoundController {
 
     mute: boolean = false;
-    sounds: Map<string, HTMLAudioElement> = new Map<string, HTMLAudioElement>();
+    private sounds: Map<string, HTMLAudioElement> = new Map<string, HTMLAudioElement>();
 
     constructor() {
 
@@ -25,7 +25,7 @@ class SoundController {
 
     play(name: string): HTMLAudioElement {
         const audio = this.get(name);
-        if (audio) {
+        if (!this.mute && audio) {
             audio.play();
         }
         return audio;
