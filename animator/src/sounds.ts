@@ -11,57 +11,65 @@ class SoundController {
         return this.sounds.get(name);
     }
 
-    add(name: string, src: string): HTMLAudioElement {
+    add(name: string, src: string): SoundController {
         const audio = new Audio(src);
         this.sounds.set(name, audio);
-        return audio;
+        return this;
     }
 
-    remove(name: string) {
+    remove(name: string): SoundController {
         const audio = this.get(name);
         this.sounds.delete(name);
-        return audio;
+        return this;
     }
 
-    play(name: string): HTMLAudioElement {
+    play(name: string): SoundController {
         const audio = this.get(name);
         if (!this.mute && audio) {
             audio.play();
         }
-        return audio;
+        return this;
     }
 
-    pause(name: string): HTMLAudioElement {
+    pause(name: string): SoundController {
         const audio = this.get(name);
         if (audio) {
             audio.pause();
         }
-        return audio;
+        return this;
     }
 
-    stop(name: string): HTMLAudioElement {
+    stop(name: string): SoundController {
         const audio = this.get(name);
         if (audio) {
             audio.pause();
             audio.currentTime = 0;
         }
-        return audio;
+        return this;
     }
 
-    scrub(name: string, time: number = 0): HTMLAudioElement {
+    scrub(name: string, time: number = 0): SoundController {
         const audio = this.get(name);
         if (audio) {
             audio.currentTime = time;
         }
-        return audio;
+        return this;
     }
 
-    volume(name: string, level: number = 1): HTMLAudioElement {
+    volume(name: string, level: number = 1): SoundController {
         const audio = this.get(name);
         if (audio) {
             audio.volume = level;
         }
-        return audio;
+        return this;
+    }
+
+    loop(name: string, on: boolean = true): SoundController {
+        const audio = this.get(name);
+        if (audio) {
+            audio.loop = on;
+        }
+        return this;
     }
 }
 
