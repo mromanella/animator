@@ -39,11 +39,29 @@ class SoundController {
         return audio;
     }
 
-    scrub(name: string, time: number = 0) {
+    stop(name: string): HTMLAudioElement {
+        const audio = this.get(name);
+        if (audio) {
+            audio.pause();
+            audio.currentTime = 0;
+        }
+        return audio;
+    }
+
+    scrub(name: string, time: number = 0): HTMLAudioElement {
         const audio = this.get(name);
         if (audio) {
             audio.currentTime = time;
         }
+        return audio;
+    }
+
+    volume(name: string, level: number = 1): HTMLAudioElement {
+        const audio = this.get(name);
+        if (audio) {
+            audio.volume = level;
+        }
+        return audio;
     }
 }
 
