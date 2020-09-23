@@ -4,5 +4,7 @@ import * as models from "./src/models";
 import * as utils from "./src/utils";
 import * as events from "./src/events";
 import * as elements from "./src/elements/elements";
+import * as animator from "./src/animator";
+import * as sounds from "./src/sounds";
 
-export { collision, keyboard, models, utils, events, elements }
+export { collision, keyboard, models, utils, events, elements, animator, sounds }
