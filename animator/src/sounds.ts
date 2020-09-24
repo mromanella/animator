@@ -1,11 +1,28 @@
 class SoundController {
 
     mute: boolean = false;
+    private _volumeMax: number = 1;
     private sounds: Map<string, HTMLAudioElement> = new Map<string, HTMLAudioElement>();
 
     constructor() {
 
     }
+
+    
+    public get volumeMax() : number {
+        return this._volumeMax;
+    }
+
+    
+    public set volumeMax(max: number) {
+        this._volumeMax = max;
+        for (let audio of this.sounds.values()) {
+            if (audio.volume > this._volumeMax) {
+                audio.volume = this._volumeMax;
+            }
+        }
+    }
+    
 
     get(name: string): HTMLAudioElement {
         return this.sounds.get(name);
@@ -13,6 +30,9 @@ class SoundController {
 
     add(name: string, src: string): SoundController {
         const audio = new Audio(src);
+        if (audio.volume > this._volumeMax) {
+            audio.volume = this._volumeMax;
+        }
         this.sounds.set(name, audio);
         return this;
     }
@@ -68,6 +88,14 @@ class SoundController {
         const audio = this.get(name);
         if (audio) {
             audio.loop = on;
+        }
+        return this;
+    }
+
+    playBackRate(name: string, rate: number = 1): SoundController {
+        const audio = this.get(name);
+        if (audio) {
+            audio.playbackRate = rate;
         }
         return this;
     }
