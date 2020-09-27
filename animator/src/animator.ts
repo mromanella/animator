@@ -17,8 +17,8 @@ export class Animator {
 	 * @param callbackFunc The function to perform on every draw. Accepts 2dCanvasContext as a param.
 	 * @param FPS The FPS rate. Pass in an int - 30 for 30 FPS.
 	 */
-	constructor(canvasId: string, fps: number, callback: any, startPaused: boolean = false, ...args: any[]) {
-		this.canvasEl = document.querySelector(`#${canvasId}`);
+	constructor(canvasSelector: string, fps: number, callback: any, startPaused: boolean = false, ...args: any[]) {
+		this.canvasEl = document.querySelector(`${canvasSelector}`);
 		this.ctx = this.canvasEl.getContext('2d');
 		this.canvasHeight = this.canvasEl.height;
 		this.canvasWidth = this.canvasEl.width;
