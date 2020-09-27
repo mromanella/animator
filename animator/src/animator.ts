@@ -1,4 +1,4 @@
-export class Animator {
+export default class Animator {
 
 	canvasEl: HTMLCanvasElement;
 	ctx: CanvasRenderingContext2D;
