@@ -11,10 +11,12 @@ const ARROW_RIGHT = 'ArrowRight';
 const CONTROL = 'Control';
 const SHIFT = 'Shift';
 const SPACE = ' ';
+const ENTER = 'Enter';
 
 export {
     W, A, S, D, J, P, ARROW_UP,
     ARROW_DOWN,
     ARROW_LEFT,
-    ARROW_RIGHT, CONTROL, SHIFT, SPACE
+    ARROW_RIGHT, CONTROL, SHIFT, SPACE,
+    ENTER
 };
