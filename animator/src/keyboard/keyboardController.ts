@@ -131,7 +131,7 @@ export class KeyboardController {
         }
     }
 
-    unLockKey(keyName: string) {
+    unlockKey(keyName: string) {
         const key = this.getKey(keyName);
         if (key) {
             key.setLocked(false);
