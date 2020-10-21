@@ -1,7 +1,7 @@
-import { Point, BoundingBox } from "./models";
+import { Point, BoundingBox } from "./objects/index";
 
 function randomBetween(lowerBound: number = 0, upperBound: number = 1): number {
-    return Math.floor(Math.random() * upperBound) + lowerBound;
+    return Math.floor(Math.random() * (upperBound - lowerBound + 1) + lowerBound);
 }
 
 function randomChoice(items: any[]): any {

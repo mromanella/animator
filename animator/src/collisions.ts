@@ -1,37 +1,41 @@
-import { GameObject } from "./models";
+import { GameObject } from "./objects/index";
 
-function withinVerticalBounds(obj1: GameObject, obj2: GameObject): boolean {
+function _withinHorizontal(obj1: GameObject, obj2: GameObject): boolean {
     const obj1Bounds = obj1.getBoundingBox();
     const obj2Bounds = obj2.getBoundingBox();
-    if (obj1Bounds.yMin < obj2Bounds.yMax && obj1Bounds.yMax > obj2Bounds.yMin) {
+
+    if (obj2Bounds.xMin < obj1Bounds.xMax && obj2Bounds.xMin > obj1Bounds.xMin) {
         return true;
     }
     return false;
 }
 
-function withinHorizontalBounds(obj1: GameObject, obj2: GameObject): boolean {
+function _withinVertical(obj1: GameObject, obj2: GameObject): boolean {
     const obj1Bounds = obj1.getBoundingBox();
     const obj2Bounds = obj2.getBoundingBox();
-    if (obj1Bounds.xMin < obj2Bounds.xMax && obj1Bounds.xMax > obj2Bounds.xMin) {
+
+    if (obj2Bounds.yMin < obj1Bounds.yMax && obj2Bounds.yMin > obj1Bounds.yMin) {
         return true;
     }
     return false;
 }
 
-function withinBounds(obj1: GameObject, obj2: GameObject): boolean {
-    if (withinHorizontalBounds(obj1, obj2) && withinVerticalBounds(obj1, obj2)) {
-        return true;
-    }
-    return false;
+function withinHorizontal(obj1: GameObject, obj2: GameObject): boolean {
+    return _withinHorizontal(obj1, obj2) || _withinHorizontal(obj2, obj1);
+}
+
+function withinVertical(obj1: GameObject, obj2: GameObject) {
+    return _withinVertical(obj1, obj2) || _withinVertical(obj2, obj1);
 }
 
 function checkCollision(obj1: GameObject, obj2: GameObject): boolean {
-    return withinBounds(obj1, obj2);
+
+    const horiz = withinHorizontal(obj1, obj2) || withinHorizontal(obj2, obj1);
+    const vert = withinVertical(obj1, obj2) || withinVertical(obj2, obj1);
+
+    return horiz && vert;
 }
 
 export {
-    withinVerticalBounds,
-    withinHorizontalBounds,
-    withinBounds,
-    checkCollision
+    checkCollision, withinHorizontal, withinVertical
 }

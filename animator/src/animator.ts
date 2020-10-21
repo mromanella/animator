@@ -1,3 +1,5 @@
+import { BoundingBox } from "./objects/index";
+
 export default class Animator {
 
 	canvasEl: HTMLCanvasElement;
@@ -114,5 +116,17 @@ export default class Animator {
 
 	getDimensions() {
 		return [this.getWidth(), this.getHeight()];
+	}
+
+	noContextMenu() {
+		this.canvasEl.oncontextmenu = () => {return false};
+	}
+
+	contextMenu() {
+		this.canvasEl.oncontextmenu = () => {return true};
+	}
+
+	gameBounds() {
+		return new BoundingBox(0, 0, this.getWidth(), this.getHeight());
 	}
 }
