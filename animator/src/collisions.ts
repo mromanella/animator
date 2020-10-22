@@ -4,7 +4,7 @@ function _withinHorizontal(obj1: GameObject, obj2: GameObject): boolean {
     const obj1Bounds = obj1.getBoundingBox();
     const obj2Bounds = obj2.getBoundingBox();
 
-    if (obj2Bounds.xMin < obj1Bounds.xMax && obj2Bounds.xMin > obj1Bounds.xMin) {
+    if (obj2Bounds.xMin <= obj1Bounds.xMax && obj2Bounds.xMin >= obj1Bounds.xMin) {
         return true;
     }
     return false;
@@ -14,7 +14,7 @@ function _withinVertical(obj1: GameObject, obj2: GameObject): boolean {
     const obj1Bounds = obj1.getBoundingBox();
     const obj2Bounds = obj2.getBoundingBox();
 
-    if (obj2Bounds.yMin < obj1Bounds.yMax && obj2Bounds.yMin > obj1Bounds.yMin) {
+    if (obj2Bounds.yMin <= obj1Bounds.yMax && obj2Bounds.yMin >= obj1Bounds.yMin) {
         return true;
     }
     return false;
