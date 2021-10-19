@@ -94,7 +94,7 @@ class GameObject {
 	shouldUpdate: boolean = true;
 	updateSpeed: number;
 	updateInterval: number = null;
-	
+
 	constructor(ctx: CanvasRenderingContext2D, x: number, y: number, updateSpeed: number = null) {
 		this.ctx = ctx;
 		this.location = new Point(x, y);
@@ -107,7 +107,7 @@ class GameObject {
 	}
 
 	draw() {
-		
+
 	}
 
 	getBoundingBox(): BoundingBox {
@@ -115,6 +115,7 @@ class GameObject {
 	}
 
 	setUpdateInterval() {
+		this.clearUpdateInterval();
 		if (this.updateSpeed !== null) {
 			this.updateInterval = setInterval(this.update, this.updateSpeed);
 		}
