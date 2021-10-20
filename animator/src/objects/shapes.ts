@@ -144,8 +144,6 @@ export class Line extends GameObject {
 export class Rectangle extends GameObject {
 
 	ctx: CanvasRenderingContext2D;
-	x: number;
-	y: number;
 	width: number;
 	height: number;
 	color: string;
@@ -175,11 +173,11 @@ export class Rectangle extends GameObject {
 		this.ctx.beginPath();
 		if (this.fill) {
 			this.ctx.fillStyle = this.color;
-			this.ctx.fillRect(this.x, this.y, this.width, this.height);
+			this.ctx.fillRect(this.location.x, this.location.y, this.width, this.height);
 		} else {
 			this.ctx.lineWidth = this.lineWidth;
 			this.ctx.strokeStyle = this.color;
-			this.ctx.strokeRect(this.x, this.y, this.width, this.height);
+			this.ctx.strokeRect(this.location.x, this.location.y, this.width, this.height);
 		}
 
 		if (drawBB) {
