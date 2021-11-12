@@ -6,7 +6,7 @@ import { GameObject } from "./objects/index";
 
 /** @description A Scene to draw. Has access to the sound, event and keyboard controllers.
  * Must implement the update and draw methods im subclass.
- * 
+ *
  * @param anim The Animator object this scene belongs to.
  * @param updateSpeed How fast the scene should update. For fine grained control implement an objects
  * updates on your own.
@@ -21,7 +21,6 @@ class Scene {
     keyboardController: KeyboardController = getKeyboardController();
     updateSpeed: number;
     updateInterval: number = null;
-    keys: Key[] = [];
 
     constructor(anim: Animator, updateSpeed: number = null) {
         this.anim = anim;
@@ -41,9 +40,6 @@ class Scene {
     }
 
     start() {
-        for (let key of this.keys) {
-            this.keyboardController.addKey(key);
-        }
         this.keyboardController.listen();
         this.anim.setCallback(this.draw);
         this.anim.resume();
@@ -56,9 +52,6 @@ class Scene {
         this.anim.pause();
         clearInterval(this.updateInterval);
         this.keyboardController.stopListening();
-        for (let key of this.keys) {
-            this.keyboardController.removeKey(key.keyName);
-        }
     }
 }
 

@@ -45,7 +45,10 @@ export class TextBoxGroup {
 	constructor(ctx: CanvasRenderingContext2D, textBoxes: TextBox[] = []) {
 		this.ctx = ctx;
 		this.textBoxes = textBoxes;
-		this.length = this.textBoxes.length;
+	}
+
+	addTextBox(textBox: TextBox) {
+		this.textBoxes.push(textBox);
 	}
 
 	draw() {
@@ -61,7 +64,7 @@ export class SelectTextBoxGroup extends TextBoxGroup {
 	originalColors: string[] = [];
 	selectedColor: string;
 
-	constructor(ctx: CanvasRenderingContext2D, selectedColor: string, textBoxes: TextBox[]) {
+	constructor(ctx: CanvasRenderingContext2D, selectedColor: string, textBoxes: TextBox[] = []) {
 		super(ctx);
 		this.ctx = ctx;
 		this.selectedColor = selectedColor;
@@ -80,12 +83,12 @@ export class SelectTextBoxGroup extends TextBoxGroup {
 		this.cursor -= 1;
 	}
 
-	
-	public get cursor() : number {
+
+	public get cursor(): number {
 		return this._cursor;
 	}
-	
-	public set cursor(cursor : number) {
+
+	public set cursor(cursor: number) {
 		if (cursor >= this.textBoxes.length) {
 			this._cursor = 0;
 		} else if (cursor < 0) {
